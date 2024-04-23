@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Read blogs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <%- include('./partials/Header.ejs') %>
+
+    <!-- list of blogs -->
+    <div class="button container">
+        <% if (locals.blogtitle ) { %>
+            <% var count=0 %>
+            <% for(var key of blogtitle) {%>
+                <button value="<%=key%>" > <%= key %> </button>
+                <% count++ %>
+            <% } %>
+            <% if (count==0) { %>
+            <h1>Write a blog first</h1>
+            <% } %>
+        <% } %> 
+    </div>
+
+
+
+    <div class="container">
+        <br>
+        <br>
+        <h1 id="blogHead"><% if (locals.randTitle) { %>
+         <%= randTitle %>
+        <% } %></h1>
+        <br>
+        <div id="blogBody"  style="white-space: pre-line;">
+            <% if (locals.randTitle) { %>
+                <%= randBlog %>
+               <% } %>
+        </div>
+    </div>
+    <%- include('./partials/Footer.ejs') %>
+    <script>
+    $("document").ready(()=>{
+        $(".button").on("click","button",function(){
+            var blognm=$(this).val();
+            console.log(blognm);
+            $.post("/readblogs",{blogname:blognm}).done((response)=>{
+                var displayBlog=response;
+                console.log(displayBlog.heading+" "+displayBlog.blog);
+                $("#blogHead").text(displayBlog.heading);
+                $("#blogBody").text(displayBlog.blog);
+            }); 
+        }) 
+    })
+        </script>
+</body>
+</html>
